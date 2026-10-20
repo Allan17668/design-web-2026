@@ -89,7 +89,14 @@
         //        this.display = this.display + digit
         // ==========================================
         appendDigit(digit) {
-          // ... seu código aqui
+          if (this.waitingForSecond) {
+            this.display = digit;
+            this.waitingForSecond = false;
+          } else if (this.display === '0') {
+            this.display = digit;
+          } else {
+            this.display += digit;
+        }
         },
 
         // ==========================================
@@ -105,7 +112,13 @@
         //  5. this.waitingForSecond = true
         // ==========================================
         setOperator(op) {
-          // ... seu código aqui
+          if (this.display === 'Erro') this.clear();
+          if (this.operator !== null && !this.waitingForSecond){
+            this.calculate();
+          }
+          this.firstOperand = parseFloat(this.display);
+          this.operator = op;
+          this.waitingForSecond = true;
         },
 
         // ==========================================
@@ -128,9 +141,31 @@
         //  8. this.waitingForSecond = true
         // ==========================================
         calculate() {
-          // ... seu código aqui
+          if (this.operator === null || this.firstOperand === null) 
+            return;
+          const a = this.firstOperand;
+          const b = parseFloat(this.display);
+          let result;
+          switch (this.operator) {
+            case '+':
+              result = a + b;
+              break;
+            case '-':
+              result = a - b;
+              break;
+            case '*':
+              result = a * b;
+              break;
+            case '/':
+              result = b === 0 ? 'Erro' : a / b;
+              break;
+          }
+          this.display = String(result);
+          this.firstOperand = null;
+          this.operator = null;
+          this.waitingForSecond = true;
         }
-
+        
       }
 
     }).mount('#app')
