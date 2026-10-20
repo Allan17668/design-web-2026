@@ -5,55 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calculadora Vue — Aula 01</title>
 
-  <!-- FERRAMENTAS: Tailwind, DaisyUI e Vue -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body class="min-h-screen bg-base-200 flex items-center justify-center p-6">
 
-  <!-- Contexto: tudo aqui dentro é controlado pelo Vue -->
+  
   <div id="app" class="card bg-base-100 shadow-2xl w-full max-w-md">
     <div class="card-body">
 
-      <h1 class="card-title justify-center text-2xl mb-2">Calculadora Vue</h1>
+      <h1 class="card-title justify-center text-2xl mb-2">🧮 Calculadora Vue</h1>
 
-      <!-- Visualizar -->
+      <!-- VISOR — {{ display }} mostra o estado reativo -->
       <div class="bg-base-300 rounded-box p-4 mb-4 min-h-16 flex items-center justify-end">
         <div class="text-3xl font-mono font-bold break-all">{{ display }}</div>
       </div>
 
-      <!-- Acao -->
+      <!-- BOTÕES — cada um dispara um método via @click -->
       <div class="grid grid-cols-4 gap-2">
 
-        <!-- Linha 1 -->
-        <button class="btn btn-error text-xl" @click="clear">C</button>
-        <button class="btn btn-warning text-xl" @click="square">x²</button>
-        <button class="btn btn-warning text-xl" @click="setOperator('^')">x^y</button>
-        <button class="btn btn-primary text-xl" @click="setOperator('/')">÷</button>
-
-        <!-- Linha 2 -->
         <button class="btn btn-ghost text-xl" @click="appendDigit('7')">7</button>
         <button class="btn btn-ghost text-xl" @click="appendDigit('8')">8</button>
         <button class="btn btn-ghost text-xl" @click="appendDigit('9')">9</button>
-        <button class="btn btn-primary text-xl" @click="setOperator('*')">×</button>
+        <button class="btn btn-primary text-xl" @click="setOperator('/')">÷</button>
 
-        <!-- Linha 3 -->
         <button class="btn btn-ghost text-xl" @click="appendDigit('4')">4</button>
         <button class="btn btn-ghost text-xl" @click="appendDigit('5')">5</button>
         <button class="btn btn-ghost text-xl" @click="appendDigit('6')">6</button>
-        <button class="btn btn-primary text-xl" @click="setOperator('-')">−</button>
+        <button class="btn btn-primary text-xl" @click="setOperator('*')">×</button>
 
-        <!-- Linha 4 -->
         <button class="btn btn-ghost text-xl" @click="appendDigit('1')">1</button>
         <button class="btn btn-ghost text-xl" @click="appendDigit('2')">2</button>
         <button class="btn btn-ghost text-xl" @click="appendDigit('3')">3</button>
-        <button class="btn btn-primary text-xl" @click="setOperator('+')">+</button>
+        <button class="btn btn-primary text-xl" @click="setOperator('-')">−</button>
 
-        <!-- Linha 5 -->
-        <button class="btn btn-ghost text-xl col-span-2" @click="appendDigit('0')">0</button>
-        <button class="btn btn-ghost text-xl" @click="appendDecimal">.</button>
+        <button class="btn btn-error text-xl" @click="clear">C</button>
+        <button class="btn btn-ghost text-xl" @click="appendDigit('0')">0</button>
         <button class="btn btn-accent text-xl" @click="calculate">=</button>
+        <button class="btn btn-primary text-xl" @click="setOperator('+')">+</button>
 
       </div>
     </div>
@@ -62,26 +52,21 @@
   <script>
     Vue.createApp({
 
-      // ==========================================
-      // MEMÓRIA: o estado reativo da calculadora
-      // ==========================================
       data() {
-        // TODO 1 — Preencha o estado inicial:
-        //   display: '0'
-        //   firstOperand: null
-        //   operator: null
-        //   waitingForSecond: false
         return {
-          // ... seu código aqui
+          display: '0',            // o que aparece no visor
+          firstOperand: null,      // primeiro número da operação
+          operator: null,          // '+', '-', '*' ou '/'
+          waitingForSecond: false  // true = o próximo dígito substitui o visor
         }
       },
 
       // ==========================================
-      // MÃOS: as ações da calculadora
+      // MÃOS — as ações da calculadora
       // ==========================================
       methods: {
 
-        // ✅ EXEMPLO COMPLETO — use como referência
+        // ✅ EXEMPLO JÁ PRONTO — use como referência
         // Reseta a calculadora ao estado inicial.
         clear() {
           this.display = '0';
@@ -90,77 +75,59 @@
           this.waitingForSecond = false;
         },
 
-        // TODO 2 — appendDigit(digit)
-        // Digita um dígito (0 a 9) no visor.
+        // ==========================================
+        // TODO 1 — appendDigit(digit)
+        // Digita um dígito no visor.
         //
         // Regras:
-        //  - Se waitingForSecond for true:
-        //      → substitui o display pelo dígito
-        //      → marca waitingForSecond como false
-        //  - Senão, se display for '0':
-        //      → substitui pelo dígito
-        //  - Senão:
-        //      → concatena o dígito ao final do display
+        //  1. Se this.waitingForSecond for true:
+        //        this.display = digit
+        //        this.waitingForSecond = false
+        //  2. Senão, se this.display === '0':
+        //        this.display = digit
+        //  3. Senão:
+        //        this.display = this.display + digit
+        // ==========================================
         appendDigit(digit) {
           // ... seu código aqui
         },
 
-        // TODO 3 — appendDecimal()
-        // Adiciona um ponto decimal ao visor.
+        // ==========================================
+        // TODO 2 — setOperator(op)
+        // Registra o operador pendente.
         //
         // Regras:
-        //  - Se waitingForSecond for true:
-        //      → display = '0.'
-        //      → waitingForSecond = false
-        //  - Senão, se o display ainda NÃO tem '.':
-        //      → adiciona '.' ao final
-        //  - Se já tem ponto: não faz nada
-        appendDecimal() {
-          // ... seu código aqui
-        },
-
-        // TODO 4 — setOperator(op)
-        // Registra uma operação pendente.
-        //
-        // Regras:
-        //  - Se operator não for null E waitingForSecond for false:
-        //      → chame this.calculate() primeiro (encadeia operações)
-        //  - firstOperand = parseFloat(this.display)
-        //  - operator = op
-        //  - waitingForSecond = true
+        //  1. Se this.display === 'Erro': return (saia)
+        //  2. Se this.operator !== null E !this.waitingForSecond:
+        //        this.calculate()
+        //  3. this.firstOperand = parseFloat(this.display)
+        //  4. this.operator = op
+        //  5. this.waitingForSecond = true
+        // ==========================================
         setOperator(op) {
           // ... seu código aqui
         },
 
-        // TODO 5 — calculate()
+        // ==========================================
+        // TODO 3 — calculate()
         // Executa a operação pendente.
         //
         // Regras:
-        //  - Se operator ou firstOperand forem null: retorne
-        //  - a = firstOperand
-        //  - b = parseFloat(this.display)
-        //  - Aplique o operador:
-        //      '+' → a + b
-        //      '-' → a - b
-        //      '*' → a * b
-        //      '/' → se b === 0, 'Erro'; senão a / b
-        //      '^' → Math.pow(a, b)
-        //  - display = String(resultado)
-        //  - firstOperand = null
-        //  - operator = null
-        //  - waitingForSecond = true
+        //  1. Se this.operator === null OU this.firstOperand === null:
+        //        return
+        //  2. const a = this.firstOperand
+        //  3. const b = parseFloat(this.display)
+        //  4. Aplique o operador (use if/else ou switch):
+        //        '+' → a + b
+        //        '-' → a - b
+        //        '*' → a * b
+        //        '/' → b === 0 ? 'Erro' : a / b
+        //  5. this.display = String(resultado)
+        //  6. this.firstOperand = null
+        //  7. this.operator = null
+        //  8. this.waitingForSecond = true
+        // ==========================================
         calculate() {
-          // ... seu código aqui
-        },
-
-        // TODO 6 — square()
-        // Eleva o número atual ao quadrado (x²).
-        //
-        // Regras:
-        //  - n = parseFloat(this.display)
-        //  - display = String(n * n)
-        //  - waitingForSecond = true
-        square() {
           // ... seu código aqui
         }
 
