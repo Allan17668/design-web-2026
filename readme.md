@@ -1,27 +1,27 @@
-# 🧮 Calculadora Vue.js — Aula 01
+# Calculadora Vue.js — Aula 01
 
 Atividade prática da primeira aula de Vue.js.
 ## Objetivo
 
 Construir uma calculadora com as **quatro operações** (`+`, `−`, `×`, `÷`) usando **apenas Vue.js** via CDN.
 
-**Toda a estrutura visual e o esqueleto Vue já estão prontos.** Você implementa **apenas os 3 métodos** que fazem a conta funcionar.
+**Toda a estrutura visual e html com Vue já estão prontos.** Você só precisa implementar ** os 3 métodos** que fazem a funcionalidade da calculadora.
 
 
-**Já está pronto (não mexa):**
+**Já está pronto:**
 
 - Todo o HTML (a `<div id="app">`, os botões, o visor)
 - Todo o visual em Tailwind CSS + DaisyUI
-- Os botões já estão ligados aos métodos via `@click`
+- Os botões já estão conectados aos métodos via `@click`
 - A estrutura `Vue.createApp({...}).mount('#app')`
 - O `data()` com os 4 campos do estado
 - O método `clear()` completo como exemplo
 
-**Falta fazer (é o seu trabalho):**
+**Falta fazer:**
 
 3 métodos dentro do `<script>`:
 
-| TODO | Método | O que faz |
+| TODO | Método | Funcionalidade |
 |---|---|---|
 | **TODO 1** | `appendDigit(digit)` | Digita um número no visor |
 | **TODO 2** | `setOperator(op)` | Registra o operador pendente |
@@ -29,14 +29,13 @@ Construir uma calculadora com as **quatro operações** (`+`, `−`, `×`, `÷`)
 
 Abra o `index.html` e siga os comentários `TODO` em cada método.
 
-
 ### TODO 1 — `appendDigit(digit)`
 
 Recebe um dígito (`'0'` a `'9'`) e atualiza o visor.
 
 **Regras:**
 1. Se `waitingForSecond` for `true`: **substitui** `this.display` pelo dígito e marca `waitingForSecond = false`.
-2. Senão, se `this.display === '0'`: **substitui** pelo dígito (para não virar `'07'`).
+2. Senão, se `this.display === '0'`: **substitui** pelo dígito (para nao concatenar).
 3. Senão: **concatena** — `this.display = this.display + digit`.
 
 **Exemplos:**
@@ -102,7 +101,7 @@ clear() {
 
 
 
-## 📦 Entrega no GSA
+## Entrega no GSA
 
 ```bash
 git checkout -b aula-01-calculadora
