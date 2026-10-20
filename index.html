@@ -15,7 +15,7 @@
   <div id="app" class="card bg-base-100 shadow-2xl w-full max-w-md">
     <div class="card-body">
 
-      <h1 class="card-title justify-center text-2xl mb-2">🧮 Calculadora Vue</h1>
+      <h1 class="card-title justify-center text-2xl mb-2">Calculadora Vue</h1>
 
       <!-- VISOR — {{ display }} mostra o estado reativo -->
       <div class="bg-base-300 rounded-box p-4 mb-4 min-h-16 flex items-center justify-end">
@@ -54,7 +54,7 @@
 
       data() {
         return {
-          display: '0',            // o que aparece no visor
+          display: '0',            // aparece no visor
           firstOperand: null,      // primeiro número da operação
           operator: null,          // '+', '-', '*' ou '/'
           waitingForSecond: false  // true = o próximo dígito substitui o visor
@@ -62,11 +62,11 @@
       },
 
       // ==========================================
-      // MÃOS — as ações da calculadora
+      // as ações da calculadora
       // ==========================================
       methods: {
 
-        // ✅ EXEMPLO JÁ PRONTO — use como referência
+        // EXEMPLO JÁ PRONTO — use como referência
         // Reseta a calculadora ao estado inicial.
         clear() {
           this.display = '0';
