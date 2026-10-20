@@ -1,114 +1,139 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Desafio – Notícias IFRN</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Vue — Aula 01</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
+<body class="min-h-screen bg-base-200 flex items-center justify-center p-6">
 
-<body>
+  
+  <div id="app" class="card bg-base-100 shadow-2xl w-full max-w-md">
+    <div class="card-body">
 
+      <h1 class="card-title justify-center text-2xl mb-2">Calculadora Vue</h1>
 
-    <section>
-        <header>
-            <h2>Notícias</h2>
-        </header>
+      <!-- VISOR — {{ display }} mostra o estado reativo -->
+      <div class="bg-base-300 rounded-box p-4 mb-4 min-h-16 flex items-center justify-end">
+        <div class="text-3xl font-mono font-bold break-all">{{ display }}</div>
+      </div>
 
+      <!-- BOTÕES — cada um dispara um método via @click -->
+      <div class="grid grid-cols-4 gap-2">
 
-        <article>
-            <img src="https://picsum.photos/seed/reuniao/400/200" alt="Reunião" />
-            <header>
-                <span>Reunião</span>
-                <time datetime="2026-08-31T10:00">Há 1 hora, 3 minutos</time>
-            </header>
-            <h3>Gestão e representação sindical dialogam sobre demandas dos servidores</h3>
-            <p>Encontros realizados em agosto abordaram temas relacionados ao PGD, prioridades legais, readaptação e
-                banco de horas.</p>
-        </article>
+        <button class="btn btn-ghost text-xl" @click="appendDigit('7')">7</button>
+        <button class="btn btn-ghost text-xl" @click="appendDigit('8')">8</button>
+        <button class="btn btn-ghost text-xl" @click="appendDigit('9')">9</button>
+        <button class="btn btn-primary text-xl" @click="setOperator('/')">÷</button>
 
+        <button class="btn btn-ghost text-xl" @click="appendDigit('4')">4</button>
+        <button class="btn btn-ghost text-xl" @click="appendDigit('5')">5</button>
+        <button class="btn btn-ghost text-xl" @click="appendDigit('6')">6</button>
+        <button class="btn btn-primary text-xl" @click="setOperator('*')">×</button>
 
-        <article>
-            <img src="https://picsum.photos/seed/cultura/400/200" alt="Arte e Cultura" />
-            <header>
-                <span>Arte e Cultura</span>
-                <time datetime="2026-08-27T14:00">Há 4 dias</time>
-            </header>
-            <h3>Intercâmbio entre museus de brinquedos populares tem programação gratuita em Natal</h3>
-            <p>Atividades acontecem nesta sexta-feira (28) e sábado (29), no Centro de Tecnologia e Cultura do IFRN</p>
-        </article>
+        <button class="btn btn-ghost text-xl" @click="appendDigit('1')">1</button>
+        <button class="btn btn-ghost text-xl" @click="appendDigit('2')">2</button>
+        <button class="btn btn-ghost text-xl" @click="appendDigit('3')">3</button>
+        <button class="btn btn-primary text-xl" @click="setOperator('-')">−</button>
 
+        <button class="btn btn-error text-xl" @click="clear">C</button>
+        <button class="btn btn-ghost text-xl" @click="appendDigit('0')">0</button>
+        <button class="btn btn-accent text-xl" @click="calculate">=</button>
+        <button class="btn btn-primary text-xl" @click="setOperator('+')">+</button>
 
-        <article>
-            <img src="https://picsum.photos/seed/intercampi/400/200" alt="Jogos Intercampi" />
-            <header>
-                <span>Jogos Intercampi Estudantis 2026</span>
-                <time datetime="2026-08-31T09:00">Há 1 hora, 45 minutos</time>
-            </header>
-            <h3>Intercampi chega ao fim com definição das últimas medalhas</h3>
-            <p>Resultados de sexta-feira e sábado encerraram a fase final estadual</p>
-        </article>
+      </div>
+    </div>
+  </div>
 
+  <script>
+    Vue.createApp({
 
-        <article>
-            <img src="https://picsum.photos/seed/alinhamento/400/200" alt="Alinhamento" />
-            <header>
-                <span>Alinhamento</span>
-                <time datetime="2026-08-27T15:00">Há 4 dias, 1 hora</time>
-            </header>
-            <h3>Comissão de docentes realiza encontro presencial com capacitação</h3>
-            <p>Programação reúne integrantes para discutir o regimento interno e aprofundar conhecimentos sobre
-                processos relacionados à carreira docente.</p>
-        </article>
+      data() {
+        return {
+          display: '0',            // aparece no visor
+          firstOperand: null,      // primeiro número da operação
+          operator: null,          // '+', '-', '*' ou '/'
+          waitingForSecond: false  // true = o próximo dígito substitui o visor
+        }
+      },
 
+      // ==========================================
+      // as ações da calculadora
+      // ==========================================
+      methods: {
 
-        <article>
-            <img src="https://picsum.photos/seed/campus/400/200" alt="Campus Santa Cruz" />
-            <header>
-                <span>Campus Santa Cruz</span>
-                <time datetime="2026-08-30T08:00">Há 20 horas</time>
-            </header>
-            <h3>IFRN sediou eventos sobre acessibilidade e inclusão na educação</h3>
-            <p>Programação ocorreu entre os dias 26 e 28 de agosto, no Campus Santa Cruz</p>
-        </article>
+        // EXEMPLO JÁ PRONTO — use como referência
+        // Reseta a calculadora ao estado inicial.
+        clear() {
+          this.display = '0';
+          this.firstOperand = null;
+          this.operator = null;
+          this.waitingForSecond = false;
+        },
 
+        // ==========================================
+        // TODO 1 — appendDigit(digit)
+        // Digita um dígito no visor.
+        //
+        // Regras:
+        //  1. Se this.waitingForSecond for true:
+        //        this.display = digit
+        //        this.waitingForSecond = false
+        //  2. Senão, se this.display === '0':
+        //        this.display = digit
+        //  3. Senão:
+        //        this.display = this.display + digit
+        // ==========================================
+        appendDigit(digit) {
+          // ... seu código aqui
+        },
 
-        <article>
-            <img src="https://picsum.photos/seed/judo/400/200" alt="Judô" />
-            <header>
-                <span>Intercampi 2026</span>
-                <time datetime="2026-08-27T16:00">Há 4 dias, 16 horas</time>
-            </header>
-            <h3>Judô estreia e futebol define classificados nos Jogos Intercampi</h3>
-            <p>Quinta-feira reúne estreia da modalidade e rodadas que encaminham as semifinais da fase final</p>
-        </article>
+        // ==========================================
+        // TODO 2 — setOperator(op)
+        // Registra o operador pendente.
+        //
+        // Regras:
+        //  1. Se this.display === 'Erro': return (saia)
+        //  2. Se this.operator !== null E !this.waitingForSecond:
+        //        this.calculate()
+        //  3. this.firstOperand = parseFloat(this.display)
+        //  4. this.operator = op
+        //  5. this.waitingForSecond = true
+        // ==========================================
+        setOperator(op) {
+          // ... seu código aqui
+        },
 
+        // ==========================================
+        // TODO 3 — calculate()
+        // Executa a operação pendente.
+        //
+        // Regras:
+        //  1. Se this.operator === null OU this.firstOperand === null:
+        //        return
+        //  2. const a = this.firstOperand
+        //  3. const b = parseFloat(this.display)
+        //  4. Aplique o operador (use if/else ou switch):
+        //        '+' → a + b
+        //        '-' → a - b
+        //        '*' → a * b
+        //        '/' → b === 0 ? 'Erro' : a / b
+        //  5. this.display = String(resultado)
+        //  6. this.firstOperand = null
+        //  7. this.operator = null
+        //  8. this.waitingForSecond = true
+        // ==========================================
+        calculate() {
+          // ... seu código aqui
+        }
 
-        <article>
-            <img src="https://picsum.photos/seed/evento/400/200" alt="Evento" />
-            <header>
-                <span>Evento</span>
-                <time datetime="2026-08-28T10:00">Há 3 dias, 22 horas</time>
-            </header>
-            <h3>III Encontro de Assessores de Projetos de Ensino reúne representantes dos 22 Campi na Reitoria</h3>
-            <p>O evento promoveu formação, troca de experiências e discussões sobre a regulamentação e o acompanhamento
-                dos Projetos de Ensino no Instituto.</p>
-        </article>
+      }
 
-
-        <article>
-            <img src="https://picsum.photos/seed/jee/400/200" alt="JEE 2026" />
-            <header>
-                <span>JEE 2026</span>
-                <time datetime="2026-08-26T18:00">Há 5 dias, 12 horas</time>
-            </header>
-            <h3>Novas modalidades ampliam programação dos Jogos Intercampi nesta quarta-feira</h3>
-            <p>Segundo dia da fase final teve provas individuais, disputas coletivas e continuidade das rodadas
-                classificatórias</p>
-        </article>
-    </section>
-
+    }).mount('#app')
+  </script>
 </body>
-
 </html>
